@@ -1,0 +1,2 @@
+# tsTest
+default typescript project
