@@ -1,51 +1,22 @@
 // External Dependencies
 import { mongo } from "config";
 import * as dotenv from "dotenv";
-import * as mongoDB from "mongodb";
+import { connect } from "mongoose";
 
 // Global Variables
-export const collections: { games?: mongoDB.Collection } = {};
+// export const collections: { user?: any } = {};
 
 // Initialize Connection
-export async function connectToDatabase() {
+export async function connectToDatabase(): Promise<void> {
     dotenv.config();
+    await connect(process.env.DB_CONN_STRING);
 
-    console.log(mongo.url);
-    const client: mongoDB.MongoClient = new mongoDB.MongoClient(mongo.url);
+    console.log("MongoConnected");
 
-    await client.connect();
+    // await createModels();
 
-    const db: mongoDB.Db = client.db(mongo.dbName);
+    console.log("Created models in DB");
 
-    await db.command({
-        collMod: process.env.GAMES_COLLECTION_NAME,
-        validator: {
-            $jsonSchema: {
-                additionalProperties: false,
-                bsonType: "object",
-                properties: {
-                    _id: {},
-                    category: {
-                        bsonType: "string",
-                        description: "'category' is required and is a string",
-                    },
-                    name: {
-                        bsonType: "string",
-                        description: "'name' is required and is a string",
-                    },
-                    price: {
-                        bsonType: "number",
-                        description: "'price' is required and is a number",
-                    },
-                },
-                required: ["name", "price", "category"],
-            },
-        },
-    });
+    // collections.user = require("../collections/user").default;
 
-    const gamesCollection: mongoDB.Collection = db.collection(process.env.GAMES_COLLECTION_NAME);
-
-    collections.games = gamesCollection;
-
-    console.log(`Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`);
 }

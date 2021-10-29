@@ -1,9 +1,7 @@
 {
   "http": {
-    "port": 4000
+    "port": 4002
   },
   "mongo": {
-    "url": "mongodb://localhost:27017",
-    "dbName": "gamesDB"
   }
 }
