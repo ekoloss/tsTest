@@ -1,23 +1,17 @@
-import bodyParser from "body-parser";
-import config from "config";
-import express from "express";
-import path from "path";
-import { gamesRouter } from "./routes/games.router";
-import { connectToDatabase } from "./services/database.service";
+import * as dotenv from 'dotenv';
 
-const app = express();
-app.use(bodyParser.urlencoded({extended : false}));
-const initPath = path.join(__dirname, "..", "entity");
-console.log(initPath);
-connectToDatabase()
-    .then(() => {
-        app.use("/games", gamesRouter);
+import logger from './component/logger';
+import mongo from './component/mongodb';
+import server from './component/server';
 
-        app.listen(config.http.port, () => {
-            console.log(`Server started at http://localhost:${config.http.port}`);
-        });
-    })
-    .catch((error: Error) => {
-        console.error("Database connection failed", error);
-        process.exit();
-    });
+const run = async (): Promise<void> => {
+  try {
+  dotenv.config();
+  await mongo.init();
+  await server.init();
+  } catch (err) {
+    logger.error(err);
+  }
+};
+
+run();
