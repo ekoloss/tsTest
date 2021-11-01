@@ -1,28 +1,41 @@
-// // External Dependencies
-// import { mongo } from "config";
-// import * as dotenv from "dotenv";
-// import fs from "fs";
-// import * as mongoDB from "mongodb";
-// import path from "path";
-//
-// // Global Variables
-// export const collections: {} = {};
-//
-// // Initialize Connection
-// export async function connectToDatabase() {
-//     dotenv.config();
-//
-//     const client: mongoDB.MongoClient = new mongoDB.MongoClient(mongo.url);
-//
-//     await client.connect();
-//
-//     const db: mongoDB.Db = client.db(mongo.dbName);
-//
-//     await db.command();
-//
-//     const gamesCollection: mongoDB.Collection = db.collection(process.env.GAMES_COLLECTION_NAME);
-//     const adad = ["games"];
-//     collections[adad[0]] = gamesCollection;
-//
-//     console.log(`Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`);
-// }
+import fs from 'fs';
+import {connect, Schema} from 'mongoose';
+import path from 'path';
+import logger from './logger';
+
+export interface Collections {
+  [key: string]: object;
+}
+
+class Mongo {
+  public collections: Collections = {};
+
+  public async init(): Promise<void> {
+    await connect(process.env.DB_CONN_STRING);
+
+    this.crawler();
+    logger.info('Mongo connected');
+  }
+
+  private crawler(): void {
+    const res = fs.readdirSync(path.join(__dirname, '../entities'));
+
+    this.collections = res.reduce((models, item) => {
+      const pathFile = `../entities/${item}/schema`;
+
+      try {
+        const schema: Schema = require(pathFile).default;
+        return{
+          ...models,
+          [item]: schema,
+        };
+      } catch (e) {
+        if (e.code !== 'MODULE_NOT_FOUND') {
+          throw e;
+        }
+      }
+    }, {});
+  }
+}
+
+export default new Mongo();

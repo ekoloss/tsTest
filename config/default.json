@@ -1,9 +1,18 @@
 {
-  "http": {
-    "port": 4000
+  "logger": {
+    "level": "silly"
   },
-  "mongo": {
-    "url": "mongodb://localhost:27017",
-    "dbName": "gamesDB"
+  "server": {
+    "port": 4002,
+    "cors": {
+      "origins": [],
+      "allowHeaders": ["Authorization"]
+    },
+    "bodyParser": {
+      "extended": false,
+      "multiples": true,
+      "rejectUnknown": true,
+      "maxFieldsSize": 5242880
+    }
   }
 }
