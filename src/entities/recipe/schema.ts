@@ -1,14 +1,17 @@
 import { model, Schema } from 'mongoose';
-
-export interface Recipe {
-  name: string;
-  email: string;
-  avatar?: string;
-}
+import { Recipe } from './interface';
 
 export const schema = new Schema<Recipe>({
-  email: { type: String, required: true },
-  name: { type: String, required: true },
+  categoryId: {
+    index: true,
+    required: true,
+    type: Schema.Types.ObjectId,
+  },
+  description: { type: String, required: true },
+  isDeleted: { type: 'boolean', default: false },
+  title: { type: String, required: true, index: true },
+}, {
+  versionKey: false,
 });
 
 export default model<Recipe>('Recipe', schema);

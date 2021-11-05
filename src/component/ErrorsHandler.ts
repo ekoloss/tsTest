@@ -1,44 +1,57 @@
 import { isArray, isString } from 'lodash';
 
-const itemHandler = (item) => {
-  if (isString(item)) {
-    return item;
-  }
-
-  return item.message;
-};
-
 interface ErrorObject {
   message: string;
-  [key: string]: any;
+  field?: string;
+  stack?: string;
+  code?: number|string;
 }
 
-class ErrorsHandler extends Error {
-  public static make(errors, statusCode = 400, type) {
-    let message;
-    let data = errors;
-    if (isArray(errors)) {
-      message = errors.map((item) => itemHandler(item));
+const itemHandler = (item: string|ErrorObject): ErrorObject => {
+
+  if (item instanceof Error) {
+    return {
+      message: item.message,
+      stack: item.stack,
+    };
+  }
+
+  if (typeof item === 'string') {
+    return {
+      message: item,
+    };
+  }
+
+  if (item.message) {
+      return item;
     } else {
-      message = [itemHandler(errors)];
-      data = [errors];
+      ErrorsHandler.throw('Object of error dont have field message', 400);
     }
-    return new ErrorsHandler(message, { statusCode, type, errors: data });
+};
+
+class ErrorsHandler {
+  public static make(errors, statusCode = 400, type) {
+    let data;
+    if (isArray(errors)) {
+      data = errors.map((item) => itemHandler(item));
+    } else {
+      data = [itemHandler(errors)];
+    }
+    return new ErrorsHandler(data, { statusCode, type });
   }
 
   public static throw(errors: string|string[]|ErrorObject|ErrorObject[], statusCode: number = 400, type: string= 'common') {
     throw ErrorsHandler.make(errors, statusCode, type);
   }
 
+  public data: ErrorObject[];
   public type: string;
   public statusCode: number;
-  public errors: ErrorObject[];
 
-  constructor(message, { statusCode = 400, type = 'common', errors = [] } = {}) {
-    super(message);
+  constructor(data, { statusCode = 400, type = 'common' } = {}) {
+    this.data = data;
     this.type = type;
     this.statusCode = statusCode;
-    this.errors = errors;
   }
 }
 

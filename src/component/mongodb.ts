@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {connect, Schema} from 'mongoose';
+import { connect, Schema } from 'mongoose';
 import path from 'path';
 import logger from './logger';
 
