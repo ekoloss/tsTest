@@ -1,23 +1,26 @@
-import { Query } from 'mongoose';
 import { Mid } from '../../utils/commonIterface';
+import CommonValidate from '../../utils/CommonValidate';
 import { CategoryId } from '../category/interface';
+import CategoryValidate from '../category/validate';
 import { Recipe, RecipeCount } from './interface';
 import RecipeModel from './model';
-import Validate from './validate';
+import RecipeValidate from './validate';
 
 class RecipeControl {
   public async create(body: Recipe) {
-    await Validate.create(body);
-    throw new Error('qqqqqqqqqqq');
-    // return RecipeModel.create(body);
+    await RecipeValidate.create(body);
+    return RecipeModel.create(body);
   }
 
   public async delete( _id: Mid ): Promise<Recipe> {
+    await RecipeValidate.checkId({ _id });
     return RecipeModel.delete(_id);
   }
 
-  public async getByCategory( _id: CategoryId, page: string, limit: string  ): Promise<RecipeCount> {
+  public async getByCategory( _id: CategoryId, page: number, limit: number  ): Promise<RecipeCount> {
+    await CategoryValidate.checkId({ _id });
     const count = await RecipeModel.getCountByCategory(_id);
+    await CommonValidate.paginate({ page, limit });
     const entities = await RecipeModel.getByCategory(_id, +page, +limit);
     return {
       entities,
@@ -26,10 +29,12 @@ class RecipeControl {
   }
 
   public async getById( _id: Mid ): Promise<Recipe> {
+    await RecipeValidate.checkId({ _id });
     return RecipeModel.getById(_id);
   }
 
-  public async getAll(page: string, limit: string): Promise<RecipeCount> {
+  public async getAll(page: number, limit: number): Promise<RecipeCount> {
+    await CommonValidate.paginate({ page, limit });
     const count = await RecipeModel.getCountEntity();
     const entities = await RecipeModel.getAllOfEntity(+page, +limit);
     return {
@@ -38,7 +43,10 @@ class RecipeControl {
     };
   }
 
-  public updateCategory( _id: Mid, categoryId: Mid ): Query<any, Promise<Recipe>> {
+  public async updateCategory( _id: Mid, categoryId: Mid ): Promise<Recipe> {
+    await RecipeValidate.checkId({ _id });
+    await CategoryValidate.checkId({ _id: categoryId });
+    await CategoryValidate.possibleChangeParent({ _id, parentCategoryId: categoryId});
     return RecipeModel.updateCategory({ categoryId, _id });
   }
 

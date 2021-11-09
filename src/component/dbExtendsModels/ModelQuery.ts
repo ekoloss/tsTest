@@ -22,6 +22,12 @@ class ModelQuery {
         });
     }
 
+    public getAll(): Query<any, Promise<object>> {
+        return this.model.find({  isDeleted: false }, {
+            isDeleted: 0,
+        });
+    }
+
     public delete(_id: Mid): Query<any, Promise<object>> {
         return this.model.findOneAndUpdate({ _id }, { isDeleted: true }, {
             fields: { isDeleted: 0 },
@@ -68,7 +74,6 @@ class ModelQuery {
 
     public async ifExist(_id: string | Types.ObjectId) {
         const res  = await this.model.findOne({ _id, isDeleted: false });
-        console.log(res)
         return !!res;
     }
 }

@@ -1,4 +1,4 @@
-import { omit } from 'lodash';
+import { keys, omit } from 'lodash';
 
 export const routWrap = (callback) => {
   return async  (req, res, next) => {

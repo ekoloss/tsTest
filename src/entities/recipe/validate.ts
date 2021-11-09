@@ -1,35 +1,22 @@
-import { keys, size } from 'lodash';
-import { Types } from 'mongoose';
-import ErrorsHandler from '../../component/ErrorsHandler';
-import Validator from '../../component/Validator';
-import CategoryModel from '../category/model';
+import validator from '../../component/Validator';
 
-class Validate {
-  // public RecipeValidateCreate: RecipeValidateCreate
+class RecipeValidate {
   public recipe = {
     categoryId: 'required|mongoId_valid|string|category_exist',
     description: 'required|string',
-    title: 'required|min:3|string',
+    title: 'required|string',
+  };
+  public idSchema = {
+    _id: 'mongoId_valid|recipe_exist',
   };
 
-  public async create(value) {
+  public create(value): Promise<void> {
+    return validator(value, this.recipe);
+  }
 
-    const validation = new Validator(value, this.recipe);
-    const res = [];
-
-    await new Promise((resolve) => validation.checkAsync(null, () => {
-        const errors = validation.errors.all();
-        for (const item in errors) {
-          res.push({
-            field: item,
-            message: errors[item][0],
-          });
-        }
-        resolve();
-      }));
-
-    return size(res) > 0 ? ErrorsHandler.throw(res , 400) : true;
-}
+  public checkId(id): Promise<void> {
+    return validator(id, this.idSchema);
+  }
 }
 
-export default new Validate();
+export default new RecipeValidate();

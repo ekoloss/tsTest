@@ -1,6 +1,6 @@
 import { isArray, isString } from 'lodash';
 
-interface ErrorObject {
+export interface ErrorObject {
   message: string;
   field?: string;
   stack?: string;
@@ -30,7 +30,7 @@ const itemHandler = (item: string|ErrorObject): ErrorObject => {
 };
 
 class ErrorsHandler {
-  public static make(errors, statusCode = 400, type) {
+  public static make(errors, statusCode: number = 400, type: string= 'common') {
     let data;
     if (isArray(errors)) {
       data = errors.map((item) => itemHandler(item));
