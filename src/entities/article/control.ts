@@ -2,19 +2,25 @@ import { Mid } from '../../utils/commonIterface';
 import CommonValidate from '../../utils/CommonValidate';
 import { CategoryId } from '../category/interface';
 import CategoryValidate from '../category/validate';
+import CategorySegregationControl from '../categorySegregation/control';
 import { Article, ArticleCount } from './interface';
 import ArticleModel from './model';
 import ArticleValidate from './validate';
 
 class ArticleControl {
-  public async create(body: Article) {
+  public async create(body: Article): Promise<Article> {
+    const { categoryId } = body;
     await ArticleValidate.create(body);
-    return ArticleModel.create(body);
+    const article = await ArticleModel.create(body);
+    await CategorySegregationControl.updateCountArticle(categoryId);
+    return article;
   }
 
   public async delete( _id: Mid ): Promise<Article> {
     await ArticleValidate.checkId({ _id });
-    return ArticleModel.delete(_id);
+    const article = await ArticleModel.delete(_id);
+    await CategorySegregationControl.updateCountArticle(article.categoryId);
+    return article;
   }
 
   public async getByCategory( _id: CategoryId, page: number, limit: number  ): Promise<ArticleCount> {
@@ -46,7 +52,11 @@ class ArticleControl {
   public async updateCategory( _id: Mid, categoryId: Mid ): Promise<Article> {
     await ArticleValidate.checkId({ _id });
     await CategoryValidate.checkId({ _id: categoryId });
-    return ArticleModel.updateCategory({ categoryId, _id });
+    const oldArticle = await ArticleModel.getById(_id);
+    const article = await ArticleModel.updateCategory({ categoryId, _id });
+    await CategorySegregationControl.updateCountArticle(oldArticle.categoryId);
+    await CategorySegregationControl.updateCountArticle(article.categoryId);
+    return article;
   }
 
   public async update(_id: Mid, body: Article ): Promise<Article> {

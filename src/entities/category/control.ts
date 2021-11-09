@@ -1,9 +1,41 @@
+import { Mid } from '../../utils/commonIterface';
+import { CategorySegregation } from '../categorySegregation/interface';
+import CategorySegregationModel from '../categorySegregation/model';
 import { Category } from './interface';
 import CategoryModel from './model';
+import CategoryValidate from './validate';
 
 class CategoryControl {
-    public create(body: Category): Promise<Category> {
-        return CategoryModel.create(body);
+    public async create(body: Category | CategorySegregation): Promise<Category> {
+        await CategoryValidate.create(body);
+        const category = await CategoryModel.create(body);
+        await CategorySegregationModel.create(category);
+        return category;
+    }
+
+    public async getById(id: Mid): Promise<CategorySegregation> {
+        await CategoryValidate.checkId({ id });
+        return CategorySegregationModel.getById(id);
+    }
+
+    public async delete(id: Mid): Promise<Category> {
+        await CategoryValidate.checkId({ id });
+        const category = await CategoryModel.delete(id);
+        await CategorySegregationModel.delete(id);
+        return category;
+    }
+
+    public async getAllCategories(): Promise<Category[]> {
+        return CategoryModel.getAll();
+    }
+
+    public async update(_id, body: Category | CategorySegregation): Promise<Category> {
+        await CategoryValidate.checkId(_id );
+        await CategoryValidate.update(body);
+        await CategoryValidate.possibleChangeParent(_id, { parentCategoryId: body.parentCategoryId });
+        const category = CategoryModel.update(_id, body);
+        await CategorySegregationModel.update(_id, body);
+        return category;
     }
 }
 

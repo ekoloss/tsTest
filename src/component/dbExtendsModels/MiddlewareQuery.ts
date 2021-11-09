@@ -1,4 +1,4 @@
-import { Query, Types } from 'mongoose';
+import { Query } from 'mongoose';
 import { CategoryId } from '../../entities/category/interface';
 import ModelQuery from './ModelQuery';
 
