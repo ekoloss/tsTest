@@ -1,15 +1,18 @@
 import { model, Schema } from 'mongoose';
-
-export interface Article {
-  name: string;
-  email: string;
-  avatar?: string;
-}
+import { Article } from './interface';
 
 export const schema = new Schema<Article>({
-  avatar: String,
-  email: { type: String, required: true },
-  name: { type: String, required: true },
+  categoryId: {
+    index: true,
+    required: true,
+    type: Schema.Types.ObjectId,
+  },
+  description: { type: String, required: true },
+  isDeleted: { type: 'boolean', default: false },
+  mainText: { type: String, required: true },
+  title: { type: String, required: true, index: true },
+}, {
+  versionKey: false,
 });
 
 export default model<Article>('Article', schema);

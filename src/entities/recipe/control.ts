@@ -46,12 +46,13 @@ class RecipeControl {
   public async updateCategory( _id: Mid, categoryId: Mid ): Promise<Recipe> {
     await RecipeValidate.checkId({ _id });
     await CategoryValidate.checkId({ _id: categoryId });
-    await CategoryValidate.possibleChangeParent({ _id, parentCategoryId: categoryId});
     return RecipeModel.updateCategory({ categoryId, _id });
   }
 
   public async update(_id: Mid, body: Recipe ): Promise<Recipe> {
-   return  RecipeModel.update(_id, body);
+    await RecipeValidate.checkId(_id);
+    await RecipeValidate.update(body);
+    return  RecipeModel.update(_id, body);
   }
 
 }

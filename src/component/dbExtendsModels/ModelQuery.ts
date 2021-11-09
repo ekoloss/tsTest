@@ -35,7 +35,7 @@ class ModelQuery {
         });
     }
 
-    public update(_id, toUpdate): Query<any, Promise<Recipe>> {
+    public update(_id, toUpdate): Query<any, Promise<any>> {
         return this.model.findOneAndUpdate({
                 _id,
                 isDeleted: false,
