@@ -23,23 +23,25 @@ class Server {
       ...config.get('server.bodyParser'),
       uploadDir: os.tmpdir(),
     }));
+    this.app.use(bodyParser.json());
 
     this.app.options('*', cors(config.get('server.cors')));
 
     this.crawler();
 
     this.app.use((err, req, res, next) => {
-      if (err instanceof ErrorsHandler) {
-        logger.error(err.stack);
-        return res.status(err.statusCode).send(err.message);
+      let error = err;
+
+      if (error instanceof Error) {
+        error = ErrorsHandler.make(err, 500, 'system');
       }
 
-      if (err instanceof Error) {
-        logger.error(err.stack);
-        return res.status(500).send('System error');
+      if (error instanceof ErrorsHandler) {
+        return res.status(error.statusCode).send(error.data);
       }
 
       logger.error(err);
+      return res.status(500).send(err);
     });
 
     this.app.listen(config.get('server.port'), () => {

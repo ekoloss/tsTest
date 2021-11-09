@@ -1,5 +1,6 @@
+import config from 'config';
 import fs from 'fs';
-import {connect, Schema} from 'mongoose';
+import { connect, Schema } from 'mongoose';
 import path from 'path';
 import logger from './logger';
 
@@ -11,7 +12,7 @@ class Mongo {
   public collections: Collections = {};
 
   public async init(): Promise<void> {
-    await connect(process.env.DB_CONN_STRING);
+    await connect(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}`, config.get('mongo'));
 
     this.crawler();
     logger.info('Mongo connected');
