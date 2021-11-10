@@ -1,14 +1,14 @@
-import { Types } from 'mongoose';
+import { Mid } from '../../utils/commonIterface';
 
 export interface ArticleId {
-  _id?: Types.ObjectId | string;
+  _id?: Mid;
 }
 
 export interface Article extends ArticleId {
   title: string;
   description: string;
   mainText: string;
-  categoryId: Types.ObjectId|string;
+  categoryId: Mid;
   isDeleted?: boolean;
 }
 
@@ -16,26 +16,3 @@ export interface ArticleCount {
   entities: Article[];
   total: number;
 }
-//
-// export interface RecipeValidateCreate {
-//   title: {
-//     type: string;
-//     required?: boolean;
-//     length?: {
-//       min: number;
-//       max: number;
-//     }
-//   };
-//   description: {
-//     type: string;
-//     required?: boolean;
-//   };
-//   categoryId: {
-//     type: string;
-//     required: boolean;
-//   };
-// }
-// export interface RecipeValidateBody {
-//   title: { type: string};
-//   description: {type: string};
-// }

@@ -1,4 +1,5 @@
 import validator from '../../component/Validator';
+import { Article } from './interface';
 
 class ArticleValidate {
   public article = {
@@ -18,15 +19,15 @@ class ArticleValidate {
     _id: 'mongoId_valid|article_exist',
   };
 
-  public create(value): Promise<void> {
+  public create(value: Article): Promise<void> {
     return validator(value, this.article);
   }
 
-  public checkId(id): Promise<void> {
+  public checkId<T>(id: T): Promise<void> {
     return validator(id, this.idSchema);
   }
 
-  public update(body): Promise<void> {
+  public update(body: Article): Promise<void> {
     return validator(body, this.updateSchema);
   }
 }

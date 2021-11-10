@@ -43,21 +43,6 @@ Validator.registerAsync('article_exist', async (_id, attribute, req, passes) => 
   }
 });
 
-Validator.registerAsync('change_parent_category', async (body, attribute, req, passes, ...args) => {
-  console.log('body', body);
-  console.log('req', req);
-  console.log('args', args);
-  // try {
-  //   if (await RecipeModel.ifExist(_id)) {
-  //     passes();
-  //   } else {
-  //     passes(false, 'Article not exist');
-  //   }
-  // } catch {
-  //   passes(false, 'Article not exist');
-  // }
-});
-
 Validator.registerAsync('mongoId_valid', (_id, attribute, req, passes) => {
   if (Types.ObjectId.isValid(_id)) {
     passes();

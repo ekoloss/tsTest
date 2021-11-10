@@ -1,6 +1,4 @@
 import { Model, Query, Types } from 'mongoose';
-import { Category, CategoryId } from '../../entities/category/interface';
-import { Recipe, RecipeId } from '../../entities/recipe/interface';
 import { Mid } from '../../utils/commonIterface';
 import { cleanData } from '../../utils/utils';
 
@@ -13,10 +11,11 @@ class ModelQuery {
 
     public async create(body): Promise<any> {
         const entity = await this.model.create(body);
+
         return cleanData(entity.toJSON());
     }
 
-    public getById(_id: Mid): Query<any, Promise<object>> {
+    public getById<T>(_id: T): Query<any, Promise<object>> {
         return this.model.findOne({ _id, isDeleted: false }, {
             isDeleted: 0,
         });
@@ -35,7 +34,7 @@ class ModelQuery {
         });
     }
 
-    public update(_id, toUpdate): Query<any, Promise<any>> {
+    public update(_id: Mid, toUpdate): Query<any, Promise<any>> {
         return this.model.findOneAndUpdate({
                 _id,
                 isDeleted: false,
