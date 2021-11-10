@@ -11,7 +11,11 @@
     "object-curly-spacing": [true, "always"],
     "indent": [true, "spaces", 2],
     "no-irregular-whitespace": true,
-    "no-trailing-whitespace": [true, "ignore-jsdoc"]
+    "no-trailing-whitespace": [true, "ignore-jsdoc"],
+    "variable-name": [
+      true,
+      "allow-leading-underscore"
+    ]
   },
   "rulesDirectory": [
     "node_modules/tslint-eslint-rules/dist/rules"

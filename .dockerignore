@@ -1,0 +1,10 @@
+.git/
+node_modules/
+coverage/
+.nyc_output/
+.cache/
+.yarn/
+docker-compose.yml
+Dockerfile
+.gitignore
+.env
