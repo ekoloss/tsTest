@@ -1,6 +1,7 @@
 import ErrorsHandler from '../../component/ErrorsHandler';
 import validator from '../../component/Validator';
 import CategoryModel from '../category/model';
+import {Mid} from "../../utils/commonIterface";
 
 class CategoryValidate {
   public category = {
@@ -29,7 +30,7 @@ class CategoryValidate {
     return validator(body, this.updateSchema);
   }
 
-  public async possibleChangeParent({ _id }   , { parentCategoryId }  ) {
+  public async possibleChangeParent<T>(_id: T , parentCategoryId: Mid  ) {
     if ( !parentCategoryId ) {
       return;
     }

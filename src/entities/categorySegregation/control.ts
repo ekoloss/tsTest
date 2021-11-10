@@ -1,3 +1,4 @@
+import { Mid } from '../../utils/commonIterface';
 import ArticleModel from '../article/model';
 import RecipeModel from '../recipe/model';
 import { CategorySegregation } from './interface';
@@ -8,13 +9,13 @@ class CategorySegregationControl {
     return CategorySegregationModel.create(body);
   }
 
-  public async updateCountArticle( categoryId ) {
-    const count = await ArticleModel.getCountByCategory( categoryId );
+  public async updateCountArticle( categoryId: Mid ): Promise<void> {
+    const count: number = await ArticleModel.getCountByCategory( categoryId );
     await CategorySegregationModel.update( categoryId, { articleCount: count });
   }
 
-  public async updateCountRecipe( categoryId ) {
-    const count = await RecipeModel.getCountByCategory(categoryId);
+  public async updateCountRecipe( categoryId: Mid ): Promise<void> {
+    const count: number = await RecipeModel.getCountByCategory(categoryId);
     await CategorySegregationModel.update(categoryId, { recipeCount: count });
   }
 }

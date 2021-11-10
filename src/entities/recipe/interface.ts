@@ -1,13 +1,13 @@
-import { Types } from 'mongoose';
+import { Mid } from '../../utils/commonIterface';
 
 export interface RecipeId {
-    _id?: Types.ObjectId | string;
+    _id?: Mid;
 }
 
 export interface Recipe extends RecipeId {
     title: string;
     description: string;
-    categoryId: Types.ObjectId|string;
+    categoryId: Mid;
     isDeleted?: boolean;
 }
 
@@ -15,5 +15,3 @@ export interface RecipeCount {
     entities: Recipe[];
     total: number;
 }
-
-

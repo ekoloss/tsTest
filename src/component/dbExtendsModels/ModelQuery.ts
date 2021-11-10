@@ -15,7 +15,7 @@ class ModelQuery {
         return cleanData(entity.toJSON());
     }
 
-    public getById(_id: Mid): Query<any, Promise<object>> {
+    public getById<T>(_id: T): Query<any, Promise<object>> {
         return this.model.findOne({ _id, isDeleted: false }, {
             isDeleted: 0,
         });

@@ -4,7 +4,7 @@ import { Category } from '../category/interface';
 import { CategorySegregation } from './interface';
 
 class CategorySegregationModel extends ModelQuery {
-  public create({ _id, name, parentCategoryId }: Category | CategorySegregation): Promise<CategorySegregation> {
+  public create({ _id, name, parentCategoryId }: Category): Promise<CategorySegregation> {
     return super.create({ _id, name, parentCategoryId });
   }
 

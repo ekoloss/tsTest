@@ -1,6 +1,5 @@
 import { Mid } from '../../utils/commonIterface';
 import CommonValidate from '../../utils/CommonValidate';
-import { CategoryId } from '../category/interface';
 import CategoryValidate from '../category/validate';
 import CategorySegregationControl from '../categorySegregation/control';
 import { Article, ArticleCount } from './interface';
@@ -18,16 +17,17 @@ class ArticleControl {
 
   public async delete( _id: Mid ): Promise<Article> {
     await ArticleValidate.checkId({ _id });
-    const article = await ArticleModel.delete(_id);
-    await CategorySegregationControl.updateCountArticle(article.categoryId);
+    const article: Article = await ArticleModel.delete(_id);
+    const { categoryId } = article;
+    await CategorySegregationControl.updateCountArticle(categoryId);
     return article;
   }
 
-  public async getByCategory( _id: CategoryId, page: number, limit: number  ): Promise<ArticleCount> {
+  public async getByCategory( _id: Mid, page: number, limit: number  ): Promise<ArticleCount> {
     await CategoryValidate.checkId({ _id });
-    const count = await ArticleModel.getCountByCategory(_id);
+    const count: number = await ArticleModel.getCountByCategory(_id);
     await CommonValidate.paginate({ page, limit });
-    const entities = await ArticleModel.getByCategory(_id, +page, +limit);
+    const entities: Article[] = await ArticleModel.getByCategory(_id, +page, +limit);
     return {
       entities,
       total: count,
@@ -41,8 +41,8 @@ class ArticleControl {
 
   public async getAll(page: number, limit: number): Promise<ArticleCount> {
     await CommonValidate.paginate({ page, limit });
-    const count = await ArticleModel.getCountEntity();
-    const entities = await ArticleModel.getAllOfEntity(+page, +limit);
+    const count: number = await ArticleModel.getCountEntity();
+    const entities: Article[] = await ArticleModel.getAllOfEntity(+page, +limit);
     return {
       entities,
       total: count,
@@ -52,8 +52,8 @@ class ArticleControl {
   public async updateCategory( _id: Mid, categoryId: Mid ): Promise<Article> {
     await ArticleValidate.checkId({ _id });
     await CategoryValidate.checkId({ _id: categoryId });
-    const oldArticle = await ArticleModel.getById(_id);
-    const article = await ArticleModel.updateCategory({ categoryId, _id });
+    const oldArticle: Article = await ArticleModel.getById(_id);
+    const article: Article = await ArticleModel.updateCategory(categoryId, _id );
     await CategorySegregationControl.updateCountArticle(oldArticle.categoryId);
     await CategorySegregationControl.updateCountArticle(article.categoryId);
     return article;

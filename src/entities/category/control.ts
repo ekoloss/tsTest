@@ -6,9 +6,9 @@ import CategoryModel from './model';
 import CategoryValidate from './validate';
 
 class CategoryControl {
-    public async create(body: Category | CategorySegregation): Promise<Category> {
+    public async create(body: Category): Promise<Category> {
         await CategoryValidate.create(body);
-        const category = await CategoryModel.create(body);
+        const category: Category = await CategoryModel.create(body);
         await CategorySegregationModel.create(category);
         return category;
     }
@@ -20,7 +20,7 @@ class CategoryControl {
 
     public async delete(id: Mid): Promise<Category> {
         await CategoryValidate.checkId({ id });
-        const category = await CategoryModel.delete(id);
+        const category: Category = await CategoryModel.delete(id);
         await CategorySegregationModel.delete(id);
         return category;
     }
@@ -29,10 +29,10 @@ class CategoryControl {
         return CategoryModel.getAll();
     }
 
-    public async update(_id, body: Category | CategorySegregation): Promise<Category> {
+    public async update(_id: Mid, body: Category ): Promise<Category> {
         await CategoryValidate.checkId(_id );
         await CategoryValidate.update(body);
-        await CategoryValidate.possibleChangeParent(_id, { parentCategoryId: body.parentCategoryId });
+        await CategoryValidate.possibleChangeParent(_id, body.parentCategoryId);
         const category = CategoryModel.update(_id, body);
         await CategorySegregationModel.update(_id, body);
         return category;

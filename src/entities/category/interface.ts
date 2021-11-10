@@ -1,11 +1,11 @@
-import { Types } from 'mongoose';
+import { Mid } from '../../utils/commonIterface';
 
 export interface CategoryId {
-    _id?: Types.ObjectId | string;
+    _id?: Mid;
 }
 
 export interface Category extends CategoryId {
     name: string;
-    parentCategoryId: Types.ObjectId|string;
+    parentCategoryId: Mid;
     isDeleted?: boolean;
 }

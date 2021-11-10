@@ -21,7 +21,7 @@ router.delete('/category/:_id', routWrap(async (req, res) => {
 }));
 
 router.put('/category/:_id', routWrap(async (req, res) => {
-  res.status(200).send(await CategoryControl.update(req.params, req.body));
+  res.status(200).send(await CategoryControl.update(req.params._id, req.body));
 }));
 
 export default {
