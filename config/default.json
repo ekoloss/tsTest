@@ -2,8 +2,11 @@
   "logger": {
     "level": "silly"
   },
+  "mongo": {
+    "dbName": "ts"
+  },
   "server": {
-    "port": 4002,
+    "port": 4000,
     "cors": {
       "origins": [],
       "allowHeaders": ["Authorization"]
