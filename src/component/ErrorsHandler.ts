@@ -1,4 +1,4 @@
-import { isArray, isString } from 'lodash';
+import { isArray } from 'lodash';
 
 export interface ErrorObject {
   message: string;
