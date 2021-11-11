@@ -1,6 +1,7 @@
 import { keys } from 'lodash';
 import { Types } from 'mongoose';
 import Validator from 'validatorjs';
+import ArticleModel from '../entities/article/model';
 import CategoryModel from '../entities/category/model';
 import RecipeModel from '../entities/recipe/model';
 import ErrorsHandler from './ErrorsHandler';
@@ -30,8 +31,9 @@ Validator.registerAsync('recipe_exist', async (_id, attribute, req, passes) => {
 });
 
 Validator.registerAsync('article_exist', async (_id, attribute, req, passes) => {
+
   try {
-    if (await RecipeModel.ifExist(_id)) {
+    if (await ArticleModel.ifExist(_id)) {
       passes();
     } else {
       passes(false, 'Article not exist');
@@ -39,21 +41,6 @@ Validator.registerAsync('article_exist', async (_id, attribute, req, passes) => 
   } catch {
     passes(false, 'Article not exist');
   }
-});
-
-Validator.registerAsync('change_parent_category', async (body, attribute, req, passes, ...args) => {
-  console.log('body', body)
-  console.log('req', req)
-  console.log('args', args)
-  // try {
-  //   if (await RecipeModel.ifExist(_id)) {
-  //     passes();
-  //   } else {
-  //     passes(false, 'Article not exist');
-  //   }
-  // } catch {
-  //   passes(false, 'Article not exist');
-  // }
 });
 
 Validator.registerAsync('mongoId_valid', (_id, attribute, req, passes) => {
