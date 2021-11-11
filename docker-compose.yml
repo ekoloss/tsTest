@@ -1,21 +1,13 @@
-version: "3.4"
-
+version: '3.4'
 services:
-
   mongo:
     image: mongo:5.0.3
-    ports:
-      - 27017:27017
 
   api:
     build: .
-    env_file:
-      - .env
-    restart: always
-    expose:
-      - 4000
     depends_on:
       - mongo
-    volumes:
-      - ./node_modules:/app/node_modules
-    user: root
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV

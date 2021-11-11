@@ -1,4 +1,3 @@
-import { ValidationError } from 'fastest-validator';
 import { Types } from 'mongoose';
 
 export interface RecipeId {

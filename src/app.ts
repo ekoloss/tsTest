@@ -6,9 +6,9 @@ import server from './component/server';
 
 const run = async (): Promise<void> => {
   try {
-  dotenv.config();
-  await mongo.init();
-  await server.init();
+    dotenv.config();
+    await mongo.init();
+    await server.init();
   } catch (err) {
     logger.error(err);
   }
